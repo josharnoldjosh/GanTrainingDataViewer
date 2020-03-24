@@ -60,11 +60,14 @@ class DataManager:
 
         return [os.path.join(folder_path, x) for x in result if isinstance(x, str)]
 
+    def target_image(self, folder_path):
+        return folder_path+"_gt/target.png"
+
     def game_data(self, folder_path):
         image_paths = self.paths_for_game(folder_path)
-        utterances = [x.split('_')[1] for x in image_paths]
-        result = {'images':image_paths, 'utterances':utterances}
-        return result
+        utterances = [{'teller':x.split('_')[1].split("<drawer>")[0], 'drawer':x.split('_')[1].split("<drawer>")[1]} for x in image_paths]
+        result = {'images':image_paths, 'utterances':utterances, 'target_image':self.target_image(folder_path)}
+        return result        
         
 # Init the server
 app = Flask(__name__)
